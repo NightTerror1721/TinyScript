@@ -5,8 +5,11 @@
  */
 package kp.ts.lang;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import kp.ts.exception.TSRuntimeException;
 import kp.ts.utils.SpecialProperty;
 
@@ -61,9 +64,6 @@ public final class TSObject extends TSValue
     
     @Override
     public final TSObject castToObject() { return this; }
-    
-    @Override
-    public final TSObject toObject() { return this; }
     
     
     @Override
@@ -146,6 +146,44 @@ public final class TSObject extends TSValue
         return (prop = getProperty(SpecialProperty.CAST_STRING)) == UNDEFINED
                 ? super.toString()
                 : prop.call(this).toString();
+    }
+    
+    @Override
+    public final TSValue[] toArray()
+    {
+        TSValue prop;
+        return (prop = getProperty(SpecialProperty.CAST_ARRAY)) == UNDEFINED
+                ? super.toArray()
+                : prop.call(this).toArray();
+    }
+    
+    @Override
+    public final List<TSValue> toList()
+    {
+        TSValue prop;
+        return (prop = getProperty(SpecialProperty.CAST_ARRAY)) == UNDEFINED
+                ? Arrays.asList(super.toArray())
+                : Arrays.asList(prop.call(this).toArray());
+    }
+    
+    @Override
+    public final Map<TSValue, TSValue> toMap()
+    {
+        TSValue prop = getProperty(SpecialProperty.CAST_OBJECT);
+        if(prop == UNDEFINED)
+            prop = this;
+        else prop = prop.call(this);
+        return prop.castToObject().properties.entrySet().stream().collect(Collectors.toMap(
+                e -> new TSString(e.getKey()), e -> e.getValue().value));
+    }
+    
+    @Override
+    public final TSObject toObject()
+    {
+        TSValue prop;
+        return (prop = getProperty(SpecialProperty.CAST_OBJECT)) == UNDEFINED
+                ? this
+                : prop.call(this).castToObject();
     }
 
     @Override

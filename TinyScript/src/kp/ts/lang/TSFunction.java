@@ -49,6 +49,11 @@ public abstract class TSFunction extends TSValue
     @Override public abstract TSValue call(TSValue self, TSVarargs args);
     
     @Override
+    public final TSValue getPointerValue() { return super.getPointerValue(); }
+    @Override
+    public final TSValue setPointerValue(TSValue value) { return super.setPointerValue(value); }
+    
+    @Override
     public final TSValue getProperty(String name)
     {
         switch(name)

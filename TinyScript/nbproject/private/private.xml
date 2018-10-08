@@ -4,9 +4,14 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/D:/TS/TinyScript/src/kp/ts/Main.java</file>
+            <file>file:/D:/TS/TinyScript/src/kp/ts/lang/TSArray.java</file>
             <file>file:/D:/TS/TinyScript/src/kp/ts/lang/TSVarargs.java</file>
+            <file>file:/D:/TS/TinyScript/src/kp/ts/utils/Def.java</file>
+            <file>file:/D:/TS/TinyScript/src/kp/ts/lang/TSString.java</file>
             <file>file:/D:/TS/TinyScript/src/kp/ts/lang/TSValue.java</file>
             <file>file:/D:/TS/TinyScript/src/kp/ts/lang/TSDataType.java</file>
+            <file>file:/D:/TS/TinyScript/src/kp/ts/utils/MethodDefs.java</file>
+            <file>file:/D:/TS/TinyScript/src/kp/ts/lang/TSObject.java</file>
         </group>
     </open-files>
 </project-private>

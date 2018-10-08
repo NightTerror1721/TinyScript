@@ -15,6 +15,7 @@ public interface SpecialProperty
     String CAST_BOOLEAN = "(boolean)";
     String CAST_STRING = "(string)";
     String CAST_ARRAY = "(array)";
+    String CAST_OBJECT = "(object)";
     String CAST_ITERATOR = "(iterator)";
     
     String OP_EQUALS = "==";

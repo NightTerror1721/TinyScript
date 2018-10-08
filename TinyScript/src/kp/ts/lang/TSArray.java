@@ -9,6 +9,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.StringJoiner;
+import kp.ts.exception.TSRuntimeException;
+import kp.ts.utils.Def;
 import kp.ts.utils.ProtoObject;
 
 /**
@@ -128,6 +131,19 @@ public final class TSArray extends TSValue
     }
     
     @Override
+    public final TSValue getProperty(String name)
+    {
+        switch(name)
+        {
+            default: return UNDEFINED;
+            case "concat": return CONCAT;
+            case "sort": return SORT;
+            case "sortedCopy": return SORTED_COPY;
+            case "subarray": return SUB_ARRAY;
+        }
+    }
+    
+    @Override
     public final TSValue call(TSValue self)
     {
         TSValue[] copy = new TSValue[array.length];
@@ -165,4 +181,59 @@ public final class TSArray extends TSValue
             return (value = array[it++]) == null ? UNDEFINED : value;
         }
     }
+    
+    
+    private static final TSValue CONCAT = Def.method((self, arg0, arg1, arg2) -> {
+        TSValue[] array = self.toArray();
+        String del = arg0 == UNDEFINED ? "" : arg0.toString();
+        int from = arg1 == UNDEFINED ? 0 : arg1.toInt();
+        int to = arg2 == UNDEFINED ? array.length : arg2.toInt();
+        if(to <= from)
+            throw new TSRuntimeException("'to' value cannot small than 'from'");
+        from = from < 0 ? 0 : from;
+        to = to > array.length ? array.length : to;
+        StringJoiner sj = new StringJoiner(del);
+        int count = 0;
+        for(TSValue val : array)
+        {
+            if(count++ < from)
+                continue;
+            if(count > to)
+                break;
+            sj.add(val.toString());
+        }
+        return new TSString(sj.toString());
+    });
+    
+    private static final TSValue SORT = Def.vmethod((self, arg0) -> {
+        if(arg0 == UNDEFINED)
+        {
+            Arrays.sort(self.toArray(), (v0, v1) -> {
+                return v0.equals(v1).toBoolean() ? 0 :
+                        v0.smallerThan(v1).toBoolean() ? -1 : 1;
+            });
+        }
+        else Arrays.sort(self.toArray(), (v0, v1) -> arg0.call(UNDEFINED, v0, v1).toInt());
+    });
+    
+    private static final TSValue SUB_ARRAY = Def.method((self, arg0, arg1) -> {
+        if(arg1 == UNDEFINED)
+            return new TSArray(Arrays.copyOf(self.toArray(), arg0.toInt()));
+        return new TSArray(Arrays.copyOfRange(self.toArray(), arg0.toInt(), arg1.toInt()));
+    });
+    
+    private static final TSValue SORTED_COPY = Def.method((self, arg0) -> {
+        TSValue[] old = self.toArray();
+        TSValue[] array = new TSValue[old.length];
+        System.arraycopy(old, 0, array, 0, old.length);
+        if(arg0 == UNDEFINED)
+        {
+            Arrays.sort(self.toArray(), (v0, v1) -> {
+                return v0.equals(v1).toBoolean() ? 0 :
+                        v0.smallerThan(v1).toBoolean() ? -1 : 1;
+            });
+        }
+        else Arrays.sort(self.toArray(), (v0, v1) -> arg0.call(UNDEFINED, v0, v1).toInt());
+        return new TSArray(array);
+    });
 }

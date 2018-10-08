@@ -69,7 +69,7 @@ public abstract class TSValue extends TSVarargs
     public TSObject castToObject() { throw new TSCastException(this, TSDataType.OBJECT); }
     public TSFunction castToFunction() { throw new TSCastException(this, TSDataType.FUNCTION); }
     public TSIterator castToIterator() { throw new TSCastException(this, TSDataType.ITERATOR); }
-    //public <T extends TSNative> T castToNative() { throw new TSCastException(this, TSDataType.NATIVE); }
+    public <T extends TSNative> T castToNative() { throw new TSCastException(this, TSDataType.NATIVE); }
     
     
     /* Common operators */
@@ -170,9 +170,7 @@ public abstract class TSValue extends TSVarargs
     public final TSValue arg0() { return this; }
 
     @Override
-    public final TSValue arg(int index) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    public final TSValue arg(int index) { return index == 0 ? this : UNDEFINED; }
     
     
     public static final TSValue UNDEFINED = TSUndefined.INSTANCE;

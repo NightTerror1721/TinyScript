@@ -49,6 +49,11 @@ public abstract class TSIterator extends TSValue
     public final TSValue not() { return hasNext() ? FALSE : TRUE; }
     
     @Override
+    public final TSValue getPointerValue() { return super.getPointerValue(); }
+    @Override
+    public final TSValue setPointerValue(TSValue value) { return super.setPointerValue(value); }
+    
+    @Override
     public final TSValue getProperty(String name)
     {
         switch(name)
