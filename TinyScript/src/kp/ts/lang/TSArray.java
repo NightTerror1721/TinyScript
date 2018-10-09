@@ -154,7 +154,7 @@ public final class TSArray extends TSValue
     public final TSValue call(TSValue self, TSValue arg0) { return new TSArray(arg0.toArray()); }
     
     @Override
-    public final TSIterator iterator() { return new ArrayIterator(); }
+    public final TSIterator createIterator() { return new ArrayIterator(); }
     
     @Override
     public final TSValue createNewInstance()

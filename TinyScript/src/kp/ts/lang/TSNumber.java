@@ -68,6 +68,8 @@ public abstract class TSNumber extends TSValue
     @Override
     public final TSValue createNewInstance(TSValue arg0) { return new Float64(arg0.toDouble()); }
     
+    public abstract NumType getNumberType();
+    
     
     
     private static final TSValue IS_FINITE = Def.method((self) -> {
@@ -104,6 +106,7 @@ public abstract class TSNumber extends TSValue
         @Override public final String toString() { return Integer.toString(value); }
         @Override public final boolean equals(Object o) { return o instanceof TSValue && this.value == ((TSValue) o).toDouble(); }
         @Override public final boolean isInteger() { return true; }
+        @Override public final NumType getNumberType() { return NumType.INT; }
         
         /* Common operators */
         @Override public final TSValue equals(TSValue value) { return this.value == value.toDouble() ? TRUE : FALSE; }
@@ -147,6 +150,7 @@ public abstract class TSNumber extends TSValue
         @Override public final String toString() { return Long.toString(value); }
         @Override public final boolean equals(Object o) { return o instanceof TSValue && this.value == ((TSValue) o).toDouble(); }
         @Override public final boolean isLongInteger() { return true; }
+        @Override public final NumType getNumberType() { return NumType.LONG; }
         
         /* Common operators */
         @Override public final TSValue equals(TSValue value) { return this.value == value.toDouble() ? TRUE : FALSE; }
@@ -191,6 +195,7 @@ public abstract class TSNumber extends TSValue
         @Override public final boolean equals(Object o) { return o instanceof TSValue && this.value == ((TSValue) o).toDouble(); }
         @Override public final boolean isFloat() { return true; }
         @Override public final boolean isDecimal() { return true; }
+        @Override public final NumType getNumberType() { return NumType.FLOAT; }
         
         /* Common operators */
         @Override public final TSValue equals(TSValue value) { return this.value == value.toDouble() ? TRUE : FALSE; }
@@ -235,6 +240,7 @@ public abstract class TSNumber extends TSValue
         @Override public final boolean equals(Object o) { return o instanceof TSValue && this.value == ((TSValue) o).toDouble(); }
         @Override public final boolean isLongFloat() { return true; }
         @Override public final boolean isDecimal() { return true; }
+        @Override public final NumType getNumberType() { return NumType.DOUBLE; }
         
         /* Common operators */
         @Override public final TSValue equals(TSValue value) { return this.value == value.toDouble() ? TRUE : FALSE; }
@@ -281,6 +287,7 @@ public abstract class TSNumber extends TSValue
         @Override public final String toString() { return Integer.toString(value); }
         @Override public final boolean equals(Object o) { return o instanceof TSValue && this.value == ((TSValue) o).toDouble(); }
         @Override public final boolean isInteger() { return true; }
+        @Override public final NumType getNumberType() { return NumType.INT; }
         
         /* Common operators */
         @Override public final TSValue equals(TSValue value) { return this.value == value.toDouble() ? TRUE : FALSE; }
@@ -309,4 +316,6 @@ public abstract class TSNumber extends TSValue
         @Override public final TSValue bitwiseXor(TSValue value) { return new Int64(this.value ^ value.toLong()); }
         @Override public final TSValue bitwiseNot() { return new Int32(~this.value); }
     }
+    
+    public static enum NumType { INT, LONG, FLOAT, DOUBLE; }
 }

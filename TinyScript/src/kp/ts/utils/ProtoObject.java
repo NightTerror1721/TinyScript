@@ -6,6 +6,7 @@
 package kp.ts.utils;
 
 import java.util.HashMap;
+import java.util.Map;
 import kp.ts.lang.TSObject;
 import kp.ts.lang.TSObject.Property;
 import kp.ts.lang.TSValue;
@@ -24,4 +25,12 @@ public class ProtoObject extends HashMap<String, Property>
     public final void put(String name, TSValue value, boolean isFrozen) { put(name, new Property(value, isFrozen)); }
 
     public final TSObject build(boolean frozen) { return new TSObject(this, frozen); }
+    
+    public static final TSObject createFrom(Map<String, TSValue> map, boolean isFrozen)
+    {
+        ProtoObject obj = new ProtoObject();
+        for(Map.Entry<String, TSValue> e : map.entrySet())
+            obj.put(e.getKey(), e.getValue());
+        return obj.build(isFrozen);
+    }
 }

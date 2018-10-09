@@ -67,9 +67,9 @@ public abstract class TSIterator extends TSValue
     }
     
     @Override
-    public final TSValue call(TSValue self, TSValue arg0) { return arg0.iterator(); }
+    public final TSValue call(TSValue self, TSValue arg0) { return arg0.createIterator(); }
     
-    @Override public final TSIterator iterator() { return this; }
+    @Override public final TSIterator createIterator() { return this; }
     @Override public abstract boolean hasNext();
     @Override public abstract TSValue next();
     

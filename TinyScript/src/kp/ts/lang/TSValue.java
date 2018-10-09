@@ -6,12 +6,15 @@
 package kp.ts.lang;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import kp.ts.exception.TSCastException;
 import kp.ts.exception.TSUnsupportedOperationException;
 import kp.ts.lang.TSObject.Property;
+import kp.ts.lang.core.TSMap;
 
 /**
  *
@@ -143,7 +146,7 @@ public abstract class TSValue extends TSVarargs
     public TSValue createNewInstance(TSVarargs args) { return createNewInstance(args.arg0(), args.arg(1), args.arg(2), args.arg(3)); }
     
     /* Iterator operators */
-    public TSIterator iterator() { throw new TSUnsupportedOperationException(this, "iterator"); }
+    public TSIterator createIterator() { throw new TSUnsupportedOperationException(this, "iterator"); }
     public boolean hasNext() { throw new TSUnsupportedOperationException(this, "hasNext"); }
     public TSValue next() { throw new TSUnsupportedOperationException(this, "next"); }
     
@@ -180,4 +183,135 @@ public abstract class TSValue extends TSVarargs
     public static final TSValue ZERO = new TSNumber.Int32(0);
     public static final TSValue ONE = new TSNumber.Int32(1);
     
+    
+    
+    public static final TSValue valueOf() { return UNDEFINED; }
+    
+    public static final TSValue valueOf(byte value) { return new TSNumber.Int32(value); }
+    public static final TSValue valueOf(short value) { return new TSNumber.Int32(value); }
+    public static final TSValue valueOf(int value) { return new TSNumber.Int32(value); }
+    public static final TSValue valueOf(long value) { return new TSNumber.Int64(value); }
+    public static final TSValue valueOf(float value) { return new TSNumber.Float32(value); }
+    public static final TSValue valueOf(double value) { return new TSNumber.Float64(value); }
+    public static final TSValue valueOf(char value) { return new TSNumber.Char(value); }
+    public static final TSValue valueOf(boolean value) { return value ? TRUE : FALSE; }
+    
+    public static final TSValue valueOf(Byte value) { return new TSNumber.Int32(value); }
+    public static final TSValue valueOf(Short value) { return new TSNumber.Int32(value); }
+    public static final TSValue valueOf(Integer value) { return new TSNumber.Int32(value); }
+    public static final TSValue valueOf(Long value) { return new TSNumber.Int64(value); }
+    public static final TSValue valueOf(Float value) { return new TSNumber.Float32(value); }
+    public static final TSValue valueOf(Double value) { return new TSNumber.Float64(value); }
+    public static final TSValue valueOf(Character value) { return new TSNumber.Char(value); }
+    public static final TSValue valueOf(Boolean value) { return value ? TRUE : FALSE; }
+    
+    public static final TSValue valueOf(String value) { return new TSString(value); }
+    
+    public static final TSValue valueOf(TSValue[] value) { return new TSArray(value); }
+    public static final TSValue valueOf(byte[] value)
+    {
+        TSValue[] array = new TSValue[value.length];
+        for(int i=0;i<value.length;i++)
+            array[i] = new TSNumber.Int32(value[i]);
+        return valueOf(array);
+    }
+    public static final TSValue valueOf(short[] value)
+    {
+        TSValue[] array = new TSValue[value.length];
+        for(int i=0;i<value.length;i++)
+            array[i] = new TSNumber.Int32(value[i]);
+        return valueOf(array);
+    }
+    public static final TSValue valueOf(int[] value)
+    {
+        return valueOf(Arrays.stream(value).mapToObj(TSNumber.Int32::new).toArray(TSValue[]::new));
+    }
+    public static final TSValue valueOf(long[] value)
+    {
+        return valueOf(Arrays.stream(value).mapToObj(TSNumber.Int64::new).toArray(TSValue[]::new));
+    }
+    public static final TSValue valueOf(float[] value)
+    {
+        TSValue[] array = new TSValue[value.length];
+        for(int i=0;i<value.length;i++)
+            array[i] = new TSNumber.Float32(value[i]);
+        return valueOf(array);
+    }
+    public static final TSValue valueOf(double[] value)
+    {
+        return valueOf(Arrays.stream(value).mapToObj(TSNumber.Float64::new).toArray(TSValue[]::new));
+    }
+    public static final TSValue valueOf(char[] value)
+    {
+        TSValue[] array = new TSValue[value.length];
+        for(int i=0;i<value.length;i++)
+            array[i] = new TSNumber.Char(value[i]);
+        return valueOf(array);
+    }
+    public static final TSValue valueOf(boolean[] value)
+    {
+        TSValue[] array = new TSValue[value.length];
+        for(int i=0;i<value.length;i++)
+            array[i] = value[i] ? TRUE : FALSE;
+        return valueOf(array);
+    }
+    
+    public static final TSValue valueOf(Byte[] value)
+    {
+        return valueOf(Arrays.stream(value).map(TSNumber.Int32::new).toArray(TSValue[]::new));
+    }
+    public static final TSValue valueOf(Short[] value)
+    {
+        return valueOf(Arrays.stream(value).map(TSNumber.Int32::new).toArray(TSValue[]::new));
+    }
+    public static final TSValue valueOf(Integer[] value)
+    {
+        return valueOf(Arrays.stream(value).map(TSNumber.Int32::new).toArray(TSValue[]::new));
+    }
+    public static final TSValue valueOf(Long[] value)
+    {
+        return valueOf(Arrays.stream(value).map(TSNumber.Int64::new).toArray(TSValue[]::new));
+    }
+    public static final TSValue valueOf(Float[] value)
+    {
+        return valueOf(Arrays.stream(value).map(TSNumber.Float32::new).toArray(TSValue[]::new));
+    }
+    public static final TSValue valueOf(Double[] value)
+    {
+        return valueOf(Arrays.stream(value).map(TSNumber.Float64::new).toArray(TSValue[]::new));
+    }
+    public static final TSValue valueOf(Character[] value)
+    {
+        return valueOf(Arrays.stream(value).map(TSNumber.Char::new).toArray(TSValue[]::new));
+    }
+    public static final TSValue valueOf(Boolean[] value)
+    {
+        return valueOf(Arrays.stream(value).map(TSValue::valueOf).toArray(TSValue[]::new));
+    }
+    
+    public static final TSValue valueOf(String[] value)
+    {
+        return valueOf(Arrays.stream(value).map(TSString::new).toArray(TSValue[]::new));
+    }
+    
+    public static final TSValue valueOf(TSValue[][] value)
+    {
+        return valueOf(Arrays.stream(value).map(TSArray::new).toArray(TSValue[]::new));
+    }
+    
+    public static final TSValue valueOf(Collection<TSValue> value)
+    {
+        return valueOf(value.toArray(new TSValue[value.size()]));
+    }
+    
+    public static final TSValue valueOf(Map<TSValue, TSValue> value) { return new TSMap(value); }
+    
+    public static final TSValue valueOf(final Iterator<TSValue> value)
+    {
+        return new TSIterator()
+        {
+            @Override public final boolean hasNext() { return value.hasNext(); }
+            @Override public final TSValue next() { return value.next(); }
+        };
+    }
 }

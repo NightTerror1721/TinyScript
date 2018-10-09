@@ -516,11 +516,11 @@ public final class TSObject extends TSValue
     }
     
     @Override
-    public final TSIterator iterator()
+    public final TSIterator createIterator()
     {
         TSValue prop;
         return (prop = getProperty(SpecialProperty.CAST_ITERATOR)) == UNDEFINED
-                ? super.iterator()
+                ? super.createIterator()
                 : prop.call(this).castToIterator();
     }
     
